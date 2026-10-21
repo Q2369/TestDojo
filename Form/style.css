@@ -1,0 +1,852 @@
+/* ===================== Переменные и сброс ===================== */
+:root {
+  --c-page: #F3F6FF;
+  --c-heading: #223959;
+  --c-white: #FFFFFF;
+  --c-muted: #B4D1FF;
+  --c-placeholder: #92A1BC;
+  --c-field: #F4F7FC;
+  --c-accent: #38BFC4;
+  --c-link: #55D6DA;
+
+  --card-center: #3D4553;
+  --card-edge: #26283A;
+  --card-shade: #171717;
+
+  --form-center: #233A5A;
+  --form-edge: #3C6AB9;
+
+  /* Отступ слева/справа, выравнивающий контент по контейнеру 1200px */
+  --gutter: max(20px, calc((100% - 1200px) / 2));
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  background-color: var(--c-page);
+  color: var(--c-heading);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.container {
+  width: min(1200px, 100% - 40px);
+  margin-inline: auto;
+}
+
+:focus-visible {
+  outline: 2px solid var(--c-link);
+  outline-offset: 2px;
+}
+
+/* ===================== Услуги ===================== */
+.services {
+  padding-top: clamp(20px, 4vw, 50px);
+}
+
+.services__title {
+  margin: 0 0 clamp(16px, 3vw, 40px);
+  height: 39px;
+  font-size: clamp(28px, 1.2rem + 1vw, 32px);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--c-heading);
+}
+
+/* Горизонтальный слайдер без видимого скроллбара */
+.services__list {
+  display: flex;
+  gap: clamp(9px, 1.7vw, 24px);
+  margin: 0;
+  padding: 0 var(--gutter);
+  list-style: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-padding-inline: var(--gutter);
+  scrollbar-width: none;           /* Firefox */
+  -ms-overflow-style: none;        /* старый Edge */
+  cursor: grab;
+}
+
+.services__list::-webkit-scrollbar {
+  display: none;                   /* Chrome, Safari */
+}
+
+.services__list.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+@media (hover: none) {
+  .services__list {
+    scroll-snap-type: x proximity;
+  }
+
+  .services__item {
+    scroll-snap-align: start;
+  }
+}
+
+.services__item {
+  --card-w: clamp(240px, 26.667vw, 384px);   /* 384px при 1440px */
+  flex: 0 0 var(--card-w);
+  width: var(--card-w);
+  container-type: inline-size;               /* 1cqi = 1% ширины карточки */
+}
+
+/* ===================== Карточка ===================== */
+/* Все размеры — доли от макета 384px: 24px = 6.25cqi, 42px = 10.94cqi и т.д. */
+.card {
+  --radius: 21px;
+  --notch-gap: 10px;
+
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: var(--radius);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.card__media {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: radial-gradient(farthest-side at 50% 50%, var(--card-center) 0%, var(--card-edge) 100%);
+}
+
+.card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  -webkit-user-drag: none;
+}
+
+ #service-img-2,#service-img-6 {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  height: 66%;
+}
+
+#service-img-4 {
+  position: absolute;
+  top: -100px;
+  right: 100px;
+  max-width: none;
+  width: 230%;
+  height: 200%;
+}
+
+#service-img-8 {
+  margin-top: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 70%;
+  height: 50%;
+}
+
+
+/* Линейный градиент снизу вверх поверх изображения */
+.card__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--card-shade) 0%, rgb(23 23 23 / 0) 43%);
+  pointer-events: none;
+}
+
+.card__title {
+  position: absolute;
+  left: 32px;
+  bottom: 80px;
+  z-index: 2;
+  margin: 0;
+  font-size: clamp(16px, 8.334cqi, 32px);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--c-white);
+}
+
+/* Вырез под кнопками: блок цвета фона + «обратные» скругления */
+.card__actions {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  display: flex;
+  gap: var(--notch-gap);
+  padding: var(--notch-gap) 0 0 var(--notch-gap);
+  background-color: var(--c-page);
+  border-top-left-radius: 32px;
+}
+
+.card__actions::before,
+.card__actions::after {
+  content: "";
+  position: absolute;
+  width: var(--radius);
+  height: var(--radius);
+  background: radial-gradient(circle var(--radius) at 0 0, transparent 96%, var(--c-page) 100%);
+  pointer-events: none;
+}
+
+/* скругление нижнего правого угла левой части карточки */
+.card__actions::before {
+  right: 100%;
+  bottom: 0;
+}
+
+/* скругление нижнего правого угла изображения над кнопками */
+.card__actions::after {
+  right: 0;
+  bottom: 100%;
+}
+
+.card__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  border-radius: 999px;
+  background: radial-gradient(farthest-side at 50% 50%, var(--card-center) 0%, var(--card-edge) 100%);
+  color: var(--c-white);
+  font-size: clamp(11px, 4.167cqi, 16px);
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.card__btn:hover {
+  filter: brightness(1.25);
+}
+
+.card__btn:active {
+  transform: scale(0.97);
+}
+
+.card__btn--text {
+  width: 184px;
+  height: 42px;
+  padding-inline: 32px;
+}
+
+.card__btn--icon {
+  flex-shrink: 0;
+  width: 42px;
+}
+
+.card__btn--icon img {
+  width: 14px;
+  height: 24px;
+  padding-left: 2px;
+  -webkit-user-drag: none;
+}
+
+/* ===================== Блок записи ===================== */
+.consult {
+  padding-block: clamp(24px, 4vw, 50px);
+}
+
+.consult__card {
+  --media-w: clamp(260px, 32%, 380px);
+  position: relative;
+  height: 323px;
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--media-w) minmax(0, 1fr);
+  grid-template-areas: "media content";
+  border-radius: 30px;
+  isolation: isolate;
+  background:
+    /* белое свечение за фото: центр — по центру снизу изображения */
+    radial-gradient(circle 300px at calc(var(--media-w) / 2 + 20px) 100%,
+      rgb(255 255 255 / 0.5) 0%, rgb(255 255 255 / 0) 100%),
+    /* основной фон: центр смещён вправо и вверх */
+    radial-gradient(ellipse 75% 130% at 68% 25%, var(--form-center) 0%, var(--form-edge) 100%);
+}
+
+/* Скошенный верхний правый угол */
+.consult__card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  width: 89px;
+  height: 89px;
+  background: url("media/right.svg") no-repeat 1px -1px / 100% 100%;
+  pointer-events: none;
+}
+
+/* Волна снизу слева */
+.consult__card::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 5;
+  width: 127px;
+  height: 220px;
+  pointer-events: none;
+  background: url("media/left.svg") no-repeat -1px 1px / 100% 100%;
+}
+
+.consult__media {
+  overflow: hidden;
+  grid-area: media;
+  position: absolute;
+  height: 353px;   /* голова выходит за верхний край блока */
+  width: 357px;
+  bottom: 0px;
+  left: 32px;
+  z-index: 2;
+}
+
+.consult__media img {
+  position: absolute;
+  left: 20px;
+  top: -80px;
+  height: 800px;   /* голова выходит за верхний край блока */
+  width: 400px;
+  object-fit: cover;
+}
+
+.consult__content {
+  grid-area: content;
+  position: absolute;
+  bottom: 38px;
+  right: 63px;
+  margin-left: 25px;
+  z-index: 2;
+  width: 100%;
+  max-width: 721px;
+}
+
+.consult__title {
+  max-width: 360px;
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--c-white);
+}
+
+.consult__text {
+  max-width: 560px;
+  margin: 21px 0 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--c-muted);
+}
+
+/* ===================== Форма ===================== */
+.consult-form {
+  margin-top: 21px;
+}
+
+.consult-form,
+.consult-form__field,
+.consult-form__consent {
+  position: relative;
+}
+
+/* Сообщение об ошибке под полем — не сдвигает вёрстку */
+.consult-form__error {
+  position: absolute;
+  top: calc(100% + 3px);
+  left: 2px;
+  right: 0;
+  margin: 0;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: #FFB3B3;
+  pointer-events: none;
+}
+
+.consult-form__error:empty {
+  display: none;
+}
+
+/* Подсказка о запрещённом символе — нейтральным цветом */
+.consult-form__error.is-hint {
+  color: var(--c-muted);
+}
+
+.consult-form__error--consent {
+  left: 30px;
+}
+
+.consult-form__fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 240px)) minmax(0, 200px);
+  gap: 10px;
+  align-items: end;
+}
+
+.consult-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.consult-form__label {
+  font-size: 10px;
+  height: 12px;
+  font-weight: 500;
+  color: var(--c-white);
+}
+
+.consult-form__input {
+  width: 100%;
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--c-white);
+  border-radius: 8px;
+  background-color: var(--c-field);
+  color: var(--c-heading);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.consult-form__input::placeholder {
+  color: var(--c-placeholder);
+  opacity: 1;
+}
+
+.consult-form__input[aria-invalid="true"] {
+  border-color: #FF6B6B;
+  box-shadow: 0 0 0 1px #FF6B6B;
+}
+
+.consult-form__submit {
+  width: 201px;
+  height: 44px;
+  margin-left: 20px;
+  border: 1px solid rgb(255 255 255 / 0.2);
+  border-radius: 999px;
+  background-color: var(--c-accent);
+  background-clip: padding-box;
+  color: var(--c-white);
+  font-size: 14px;
+  font-weight: 600;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.consult-form__submit:hover {
+  background-color: #2FADB2;
+}
+
+.consult-form__submit:active {
+  transform: scale(0.98);
+}
+
+.consult-form__submit:disabled {
+  opacity: 0.7;
+  cursor: progress;
+  transform: none;
+}
+
+.consult-form__consent {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 21px;
+}
+
+.consult-form__checkbox {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  border-radius: 5px;
+  background-color: rgb(0 0 0 / 0.2);
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.consult-form__checkbox:checked {
+  background: rgb(0 0 0 / 0.2) url("media/Mark.svg") no-repeat center / auto 10px;
+}
+
+.consult-form__checkbox[aria-invalid="true"] {
+  box-shadow: 0 0 0 1px #FF6B6B;
+}
+
+.consult-form__consent-text {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--c-white);
+  cursor: pointer;
+}
+
+.consult-form__consent-text a {
+  font-weight: 700;
+  color: var(--c-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.consult-form__status {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: var(--c-link);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin: 8px 0 0;
+}
+
+.consult-form__status:empty {
+  display: none;
+}
+
+.consult-form__status.is-error {
+  color: #FFB3B3;
+}
+
+/* ===================== Адаптив ===================== */
+
+/* ---------- Карточки: всё, что меньше 1440px ----------
+   Те же значения, что на десктопе, но в долях ширины карточки:
+   при ширине 384px результат совпадает с px-значениями */
+@media (max-width: 1439.98px) {
+  .card {
+    --radius: 5.47cqi;      /* 21px */
+    --notch-gap: 2.6cqi;    /* 10px */
+  }
+
+  .card__title {
+    left: 8.33cqi;          /* 32px */
+    right: 8.33cqi;
+    bottom: 20.83cqi;       /* 80px */
+  }
+
+  .card__actions {
+    border-top-left-radius: 8.33cqi;  /* 32px */
+  }
+
+  .card__btn {
+    height: 10.94cqi;       /* 42px */
+  }
+
+  .card__btn--text {
+    width: 47.92cqi;        /* 184px */
+    height: 10.94cqi;
+    padding-inline: 0;
+  }
+
+  .card__btn--icon {
+    width: 10.94cqi;
+  }
+
+  .card__btn--icon img {
+    width: 3.65cqi;         /* 14px */
+    height: 6.25cqi;        /* 24px */
+    padding-left: 0.52cqi;  /* 2px */
+  }
+
+  #service-img-4 {
+    top: -26.04cqi;         /* -100px */
+    right: 26.04cqi;        /* 100px */
+  }
+
+  #service-img-8 {
+    margin-top: 10.42cqi;   /* 40px */
+  }
+}
+
+/* ---------- Блок записи: общие правила для планшета и телефона ---------- */
+@media (max-width: 1239.98px) {
+  .consult__card {
+    --media-w: clamp(240px, 30vw, 357px);
+
+    height: auto;
+    min-height: calc(var(--media-w) * 0.905);
+    grid-template-columns: calc(var(--media-w) + 32px) minmax(0, 1fr);
+  }
+
+  .consult__content {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: auto;
+    max-width: none;
+    margin: 0;
+    align-self: center;
+    padding: 56px 48px 40px 24px;
+  }
+
+  /* Та же обрезка фото, что на десктопе, но в процентах:
+     рамка 357×353 → картинка 400×800 со сдвигом 20px / -80px */
+  .consult__media {
+    width: var(--media-w);
+    height: auto;
+    aspect-ratio: 357 / 353;
+  }
+
+  .consult__media img {
+    left: 5.6%;             /* 20 / 357 */
+    top: -22.66%;           /* -80 / 353 */
+    width: 112.04%;         /* 400 / 357 */
+    height: 226.63%;        /* 800 / 353 */
+    max-width: none;
+  }
+
+  .consult-form__fields {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  }
+
+  .consult-form__submit {
+    margin-left: 10px;
+  }
+}
+
+/* ---------- Планшет: кнопка уходит на отдельную строку ---------- */
+@media (max-width: 1023.98px) {
+  .consult-form__fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .consult-form__submit {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+/* ---------- Мобильная версия ---------- */
+@media (max-width: 767.98px) {
+  /* --- карточки --- */
+  .services__title {
+    height: 34px;
+  }
+
+  .services__item {
+    --card-w: clamp(153px, 26.667vw, 220px);
+  }
+
+  .card {
+    display: grid;
+    grid-template-areas: "media" "actions";
+    row-gap: 4px;
+    aspect-ratio: auto;
+    border-radius: 0;
+    overflow: visible;
+  }
+
+  .card__media {
+    position: relative;
+    inset: auto;
+    grid-area: media;
+    aspect-ratio: 153 / 124;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  #service-img-2 {
+    margin-top: 10%;
+  }
+
+  .card__title {
+    position: relative;
+    inset: auto;
+    z-index: 2;
+    grid-area: media;
+    align-self: end;
+    padding: 0 13px 6px;
+    font-size: 13px;
+  }
+
+  .card__actions {
+    position: static;
+    grid-area: actions;
+    gap: 6px;
+    padding: 0;
+    background: none;
+    border-radius: 0;
+  }
+
+  .card__actions::before,
+  .card__actions::after {
+    display: none;
+  }
+
+  .card__btn,
+  .card__btn--text {
+    border-radius: 12.5px;
+    height: 25px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .card__btn--text {
+    flex: 1;
+    width: auto;
+    padding-inline: 8px;
+  }
+
+  .card__btn--icon {
+    width: 25px;
+    height: 25px;
+  }
+
+  .card__btn--icon img {
+    width: 7px;
+    height: 14px;
+    padding-left: 2px;
+  }
+
+  /* --- блок записи --- */
+  .consult__card {
+    min-height: 0;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "content" "media";
+    border-radius: 20px;
+    background:
+      radial-gradient(circle 220px at 50% 100%,
+        rgb(255 255 255 / 0.45) 0%, rgb(255 255 255 / 0) 100%),
+      radial-gradient(ellipse 120% 80% at 70% 20%, var(--form-center) 0%, var(--form-edge) 100%);
+  }
+
+  /* Скос: та же фигура right.svg, отражённая в левый верхний угол */
+  .consult__card::before {
+    left: 0;
+    right: auto;
+    transform: scaleX(-1);
+  }
+
+  /* Волна: та же фигура left.svg, повёрнутая на -90°.
+     Блок 127×220 поворачивается вокруг правого нижнего угла
+     и поднимается на 127px — получается 220×127 в правом нижнем углу */
+  .consult__card::after {
+    left: auto;
+    right: 0;
+    bottom: 0;
+    transform-origin: 100% 100%;
+    transform: translateY(-127px) rotate(-90deg);
+  }
+
+  .consult__content {
+    align-self: start;
+    padding: 80px 40px 0;
+  }
+
+  .consult__title {
+    font-size: 20px;
+  }
+
+.consult__text {
+  margin: 16px 0 0;
+  font-size: 14px;
+  line-height: 140%;
+}
+
+.consult-form {
+  margin-top: 16px;
+}
+
+  .consult-form__fields {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+.consult-form__label {
+  font-size: 12px;
+  height: 15px;
+  font-weight: 500;
+}
+
+.consult-form__input {
+  border-radius: 10px;
+}
+
+  .consult-form__submit {
+    grid-column: auto;
+    width: 100%;
+    margin: 4px 0 0;
+  }
+
+  .consult-form__consent {
+    align-items: flex-start;
+    margin-top: 14px;
+  }
+
+  .consult-form__checkbox:checked {
+    background: rgb(0 0 0 / 0.2) url("media/Mark2.svg") no-repeat center / auto 10px;
+  }
+
+  .consult-form__consent-text a {
+    text-decoration: none;
+  }
+
+  .consult__media {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    justify-self: center;
+    width: 100%;
+    aspect-ratio: 350/244;
+    /*height: 244px;*/
+    margin-top: 0;
+  }
+
+  .consult__media img {
+    top: 5px;
+    left: -30px;
+    width: 125%;
+    height: 215%;
+    max-width: none;
+  }
+
+  .consult-form__status {
+    position: static;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
+
+
